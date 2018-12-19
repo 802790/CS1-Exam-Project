@@ -11,27 +11,17 @@ import java.awt.Color;
  *
  * @author 802790
  */
-public class Enemy extends Character {
-    public Enemy () {
+public class Bullet extends Character {
+    public Bullet(){
         super();
-    }
-    
-    public Enemy (int x, int y, Color color, int size, String name) {
-        super(x, y, color, size, name);
-            
-    }
-    
-    public void enemyKill(Bullet bullet) {
         
-    
-}
-    
-    @Override
-    public void update() {
         
+        }
+    public Bullet(int x, int y,Color color, int size, String name ){
+            super(x, y, color, size, name);
+    }
+    public void update(){
         super.update();
-        
     }
 }
-
 

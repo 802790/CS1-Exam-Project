@@ -30,7 +30,9 @@ public class Space extends JPanel{
     final int marginY;
     public Player player;
     public Enemy[] enemy = new Enemy[50];
+    public Bullet bullet;
     private final Timer timer;
+    public Boolean canShoot = true;
     //private Enemy enemy2;
     //private Enemy enemy3;
     
@@ -39,12 +41,13 @@ public class Space extends JPanel{
         marginX = 15;
         marginY = 15;
         player = new Player(600, 480, Color.BLUE, 20, "Player");
+        bullet = new Bullet(100000, 100000, Color.YELLOW, 10, "bullet");
         for (int i = 0; i < 50; i++){
         enemy[i] =  new Enemy((int) (Math.random() * 1200), 100000, Color.RED, 20, "Enemy");
         
+        
         }
-        //enemy2 = new Enemy(600, 300, Color.RED, 20, "Enemy2");
-        //enemy3 = new Enemy(1000, 300, Color.RED, 20, "Enemy3");
+        
         for(int i = 0; i < 100; i++){
         x[i] = (int) (Math.random() * 1100 + 25);
             y[i] = (int) (Math.random() * 860 + 25);
@@ -52,7 +55,9 @@ public class Space extends JPanel{
         timer = new Timer(); 
         timer.scheduleAtFixedRate(new ScheduleTask(), 25, 25);
         Timer spawnTimer = new Timer();
-        spawnTimer.scheduleAtFixedRate(new ScheduleSpawn(), 5000, spawnRate);
+        spawnTimer.scheduleAtFixedRate(new ScheduleSpawn(), 2000, spawnRate);
+        Timer fireTimer = new Timer();
+        fireTimer.scheduleAtFixedRate(new ScheduleFire(), 0, 500);
    }
     
     @Override
@@ -62,7 +67,7 @@ public class Space extends JPanel{
         
         g.setColor(Color.CYAN);
         drawStars(g);
-        
+        bullet.draw(g);
         player.draw(g);
         for (int i = 0; i < 50; i++){
         enemy[i].draw(g);
@@ -97,7 +102,10 @@ public class Space extends JPanel{
             player.kill();
         
         }
-        
+        if ((bullet.x >= enemy[i].x - 20 && bullet.x <= enemy[i].x + 20) && (bullet.y >= enemy[i].y - 20 && bullet.y <= enemy[i].y +20)){
+        enemy[i].setX(1000000);
+        enemy[i].setY(1000000);
+    } 
     }
     
     /**
@@ -126,6 +134,7 @@ public class Space extends JPanel{
     }
 
     void keyPressed(KeyEvent e) {
+        int i = 0;
             if (e.getKeyCode() == KeyEvent.VK_RIGHT ) {
             player.setDX(3);
         }
@@ -141,9 +150,18 @@ public class Space extends JPanel{
             if (e.getKeyCode() == KeyEvent.VK_UP ) {
             player.setDY(-3);
         }
+            if (e.getKeyCode() == KeyEvent.VK_SPACE){
+             if (canShoot == true){
+             bullet.x = player.x;
+             bullet.y = player.y;
+             bullet.setDY(-1);
+            canShoot = false;
+             }
+        }
     }
 
     void keyReleased(KeyEvent e) {
+        
         if (e.getKeyCode() == KeyEvent.VK_RIGHT)
             player.setDX(0);
         if (e.getKeyCode() == KeyEvent.VK_LEFT)
@@ -152,6 +170,7 @@ public class Space extends JPanel{
             player.setDY(0);
         if (e.getKeyCode() == KeyEvent.VK_DOWN)
             player.setDY(0);
+        
     }
     
 
@@ -176,6 +195,7 @@ public class Space extends JPanel{
             enemy[i].setDY(-2);
             
         }
+        bullet.update();
         enemy[i].setX(enemy[i].getX() + (int) (Math.random() * 20 - 10));
         enemy[i].update();
         heroVsEnemy(i);
@@ -195,10 +215,17 @@ public class Space extends JPanel{
          
         enemy[i].setY(100);
         enemy[i].setX((int) (Math.random() * 1150));
-        spawnRate -= 100;
         i++;
         
         
+        }
+    }
+    
+    private class ScheduleFire extends TimerTask {
+
+            int i = 0;
+            public void run() {
+                canShoot = true;
         }
     }
 }

@@ -10,5 +10,9 @@ package nova;
  * @author 802790
  */
 public class Boss extends Space{
-    
+    public Boss(){
+        super();
+    }
 }
+
+

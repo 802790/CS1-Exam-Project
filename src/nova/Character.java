@@ -101,7 +101,7 @@ package nova;
      }
      
      public void kill() {
-         setSize(0);
+         this.setSize(0); 
      }
       
      public void move(int dx, int dy) {
